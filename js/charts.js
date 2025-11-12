@@ -303,7 +303,7 @@ export function createSkillsRadarChart(skillsData, containerId) {
     });
     
     // Ensure exactly 7 skills
-    const numAxes = 7;
+    const numAxes = 8;
     const angleStep = (2 * Math.PI) / numAxes;
     
     // Draw background circles (levels)
@@ -323,6 +323,10 @@ export function createSkillsRadarChart(skillsData, containerId) {
     }
     
     svg.appendChild(levelsGroup);
+    
+    // Use fixed max of 100 for consistent scaling
+    const maxScale = 100;
+    console.log('🎯 Skill values:', skillsData.map(s => `${s.name}: ${s.value}`));
     
     // Draw axes and labels
     const axesGroup = createSVGElement('g', { class: 'axes' });
@@ -345,7 +349,7 @@ export function createSkillsRadarChart(skillsData, containerId) {
         });
         axesGroup.appendChild(axis);
         
-        // Label
+        // Label without value
         const labelDistance = radius + 30;
         const labelX = center + labelDistance * Math.cos(angle);
         const labelY = center + labelDistance * Math.sin(angle);
@@ -360,13 +364,13 @@ export function createSkillsRadarChart(skillsData, containerId) {
         label.textContent = skill.name;
         axesGroup.appendChild(label);
         
-        // Calculate point position (normalize value to 0-100)
-        const normalizedValue = Math.min(skill.value || 50, 100);
-        const pointRadius = (normalizedValue / 100) * radius;
+        // Calculate point position (scale to 0-100)
+        const skillValue = Math.min(skill.value || 0, maxScale);
+        const pointRadius = (skillValue / maxScale) * radius;
         const pointX = center + pointRadius * Math.cos(angle);
         const pointY = center + pointRadius * Math.sin(angle);
         
-        points.push({ x: pointX, y: pointY, value: normalizedValue });
+        points.push({ x: pointX, y: pointY, value: skill.value || 0 });
     });
     
     svg.appendChild(axesGroup);

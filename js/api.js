@@ -162,7 +162,8 @@ export async function getSkillsData() {
         const skillMapping = {
             'skill_go': 'Go',
             'skill_js': 'JavaScript',
-            'skill_algo': 'Programming',
+            'skill_algo': 'Algorithm',
+            'skill_prog': 'Programming',  
             'skill_front-end': 'Frontend',
             'skill_back-end': 'Backend',
             'skill_git': 'Git',
@@ -185,7 +186,7 @@ export async function getSkillsData() {
         console.log('🔍 Max skill values:', Object.fromEntries(skillValues));
         
         // Create array with our 7 target skills
-        const targetSkills = ['Frontend', 'Programming', 'Backend', 'Go', 'JavaScript', 'Git', 'Docker'];
+        const targetSkills = ['Frontend', 'Programming', 'Backend', 'Go', 'JavaScript', 'Git', 'Docker', 'Algorithm'];
         const skills = targetSkills.map(name => ({
             name,
             value: skillValues.get(name) || 0
@@ -202,76 +203,12 @@ export async function getSkillsData() {
             { name: 'Go', value: 0 },
             { name: 'JavaScript', value: 0 },
             { name: 'Git', value: 0 },
-            { name: 'Docker', value: 0 }
+            { name: 'Docker', value: 0 },
+            { name: 'Algorithm', value: 0 },
         ];
     }
 }
 
-/**
- * Extract skills from progress data
- * @param {Array} progressData - Progress entries
- * @returns {Array} Skills array
- */
-function extractSkillsFromProgress(progressData) {
-    const skillsCount = new Map();
-    
-    // Technology keywords to look for in project paths/names
-    const techKeywords = {
-        'javascript': 'JavaScript',
-        'js': 'JavaScript',
-        'typescript': 'TypeScript',
-        'ts': 'TypeScript',
-        'go': 'Go',
-        'golang': 'Go',
-        'sql': 'SQL',
-        'database': 'SQL',
-        'html': 'HTML/CSS',
-        'css': 'HTML/CSS',
-        'graphql': 'GraphQL',
-        'docker': 'Docker',
-        'git': 'Git',
-        'api': 'API',
-        'rest': 'REST API',
-        'algorithm': 'Algorithms',
-        'ascii': 'Algorithms',
-        'math': 'Mathematics'
-    };
-    
-    progressData.forEach(progress => {
-        const path = progress.path?.toLowerCase() || '';
-        const name = progress.object?.name?.toLowerCase() || '';
-        const combined = `${path} ${name}`;
-        const grade = progress.grade || 0;
-        
-        // Only count passed projects (grade >= 1)
-        if (grade >= 1) {
-            Object.entries(techKeywords).forEach(([keyword, skillName]) => {
-                if (combined.includes(keyword)) {
-                    skillsCount.set(skillName, (skillsCount.get(skillName) || 0) + 1);
-                }
-            });
-        }
-    });
-    
-    // If no skills found, return defaults
-    if (skillsCount.size === 0) {
-        return [
-            { name: 'Programming', value: 70 },
-            { name: 'Algorithms', value: 60 },
-            { name: 'Projects', value: 80 }
-        ];
-    }
-    
-    // Convert to normalized values (0-100)
-    const maxCount = Math.max(...Array.from(skillsCount.values()), 1);
-    const skills = Array.from(skillsCount.entries()).map(([name, count]) => ({
-        name,
-        value: Math.min(Math.round((count / maxCount) * 100), 100)
-    }));
-    
-    // Sort by value and return top skills
-    return skills.sort((a, b) => b.value - a.value).slice(0, 8);
-}
 
 /**
  * Debug function - test queries in browser console

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zone01 - Profile</title>
+    <link rel="stylesheet" href="css/output.css">
+</head>
+<body class="bg-gray-50">
+    
+    <!-- Login View -->
+    <div data-view="login" class="hidden">
+        <div class="bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 min-h-screen flex items-center justify-center">
+            <div class="container mx-auto px-4">
+                <div class="max-w-md mx-auto bg-white rounded-lg shadow-2xl overflow-hidden">
+                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6">
+                        <h1 class="text-3xl font-bold text-white text-center">Zone01 Profile</h1>
+                        <p class="text-blue-100 text-center mt-2">Sign in to view your dashboard</p>
+                    </div>
+                    
+                    <div class="p-8">
+                        <form id="loginForm" class="space-y-6">
+                            <div>
+                                <label for="identifier" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Username or Email
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="identifier" 
+                                    name="identifier" 
+                                    required
+                                    class="input-field"
+                                    placeholder="Enter username or email"
+                                >
+                            </div>
+                            
+                            <div>
+                                <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                                    Password
+                                </label>
+                                <input 
+                                    type="password" 
+                                    id="password" 
+                                    name="password" 
+                                    required
+                                    class="input-field"
+                                    placeholder="Enter password"
+                                >
+                            </div>
+                            
+                            <div id="errorMessage" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg" role="alert">
+                                <p class="font-medium">Authentication Failed</p>
+                                <p class="text-sm" id="errorText">Invalid credentials. Please try again.</p>
+                            </div>
+                            
+                            <button 
+                                type="submit" 
+                                id="loginButton"
+                                class="btn-primary w-full"
+                            >
+                                <span id="loginButtonText">Sign In</span>
+                                <span id="loginSpinner" class="hidden">
+                                    <svg class="inline animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                    </svg>
+                                    Signing in...
+                                </span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile View -->
+    <div data-view="profile" class="hidden min-h-screen">
+        <!-- Navigation Bar -->
+        <nav class="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
+            <div class="container mx-auto px-4 py-4">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-2xl font-bold text-white">Zone01 Profile</h1>
+                    <button 
+                        id="logoutButton" 
+                        class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition font-semibold"
+                    >
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Loading State -->
+        <div id="loadingState" class="container mx-auto px-4 py-12">
+            <div class="flex flex-col items-center justify-center">
+                <svg class="animate-spin h-12 w-12 text-blue-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <p class="text-gray-600 text-lg">Loading your profile...</p>
+            </div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="container mx-auto px-4 py-12 hidden">
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6 max-w-2xl mx-auto">
+                <h2 class="text-red-800 text-xl font-bold mb-2">Error Loading Profile</h2>
+                <p id="profileErrorMessage" class="text-red-600"></p>
+                <button 
+                    id="retryButton" 
+                    class="mt-4 bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition"
+                >
+                    Retry
+                </button>
+            </div>
+        </div>
+
+        <!-- Profile Content -->
+        <div id="profileContent" class="container mx-auto px-4 py-8 hidden">
+            <!-- User Info Section -->
+            <div class="card mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">User Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg">
+                        <p class="text-blue-600 text-sm font-semibold uppercase mb-1">Username</p>
+                        <p id="userLogin" class="text-2xl font-bold text-blue-900">-</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg">
+                        <p class="text-purple-600 text-sm font-semibold uppercase mb-1">Total XP</p>
+                        <p id="totalXP" class="text-2xl font-bold text-purple-900">-</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg">
+                        <p class="text-green-600 text-sm font-semibold uppercase mb-1">Audit Ratio</p>
+                        <p id="auditRatio" class="text-2xl font-bold text-green-900">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Section -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- XP Progress Chart -->
+                <div class="card">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">XP Progress Over Time</h2>
+                    <div id="xpChart" class="w-full" style="min-height: 400px;"></div>
+                </div>
+
+                <!-- Skills Radar Chart -->
+                <div class="card">
+                    <h2 class="text-xl font-bold text-gray-800 mb-4">Skills Overview</h2>
+                    <div id="skillsChart" class="w-full flex items-center justify-center" style="min-height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { init } from './js/router.js';
+        import { login } from './js/auth.js';
+        import { navigate } from './js/router.js';
+        
+        // Initialize router
+        init();
+        
+        // Login form handler
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const identifier = document.getElementById('identifier').value.trim();
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const errorText = document.getElementById('errorText');
+            const loginButton = document.getElementById('loginButton');
+            const loginButtonText = document.getElementById('loginButtonText');
+            const loginSpinner = document.getElementById('loginSpinner');
+            
+            // Hide error message
+            errorMessage.classList.add('hidden');
+            
+            // Show loading state
+            loginButton.disabled = true;
+            loginButtonText.classList.add('hidden');
+            loginSpinner.classList.remove('hidden');
+            
+            try {
+                await login(identifier, password);
+                // Navigate to profile on success
+                navigate('profile');
+            } catch (error) {
+                // Show error message
+                errorText.textContent = error.message || 'Invalid credentials. Please try again.';
+                errorMessage.classList.remove('hidden');
+                
+                // Reset button state
+                loginButton.disabled = false;
+                loginButtonText.classList.remove('hidden');
+                loginSpinner.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

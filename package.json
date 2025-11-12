@@ -1,0 +1,31 @@
+{
+  "name": "zone01-graphql-profile",
+  "version": "1.0.0",
+  "description": "Zone01 GraphQL Profile Page - SPA with interactive SVG charts",
+  "main": "index.html",
+  "scripts": {
+    "build:css": "tailwindcss -i ./input.css -o ./css/output.css",
+    "watch:css": "tailwindcss -i ./input.css -o ./css/output.css --watch",
+    "start:frontend": "http-server . -p 3000 -c-1",
+    "start:backend": "cd server && go run .",
+    "dev": "concurrently \"npm run watch:css\" \"npm run start:backend\" \"npm run start:frontend\"",
+    "build": "npm run build:css"
+  },
+  "keywords": [
+    "graphql",
+    "zone01",
+    "profile",
+    "svg",
+    "charts",
+    "spa"
+  ],
+  "author": "Zone01 Student",
+  "license": "MIT",
+  "devDependencies": {
+    "tailwindcss": "^3.4.0",
+    "autoprefixer": "^10.4.16",
+    "postcss": "^8.4.32",
+    "concurrently": "^8.2.2",
+    "http-server": "^14.1.1"
+  }
+}

@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Compiled CSS
+css/output.css
+
+# Go
+server/graphql-proxy
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment
+.env
+.env.local

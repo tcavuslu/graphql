@@ -1,5 +1,7 @@
 # Zone01 GraphQL Profile
 
+A modern profile page built with Vanilla JS, Tailwind CSS, and Go backend, displaying user data from the Zone01 GraphQL API.
+
 ## Quick Start
 
 ```bash
@@ -10,46 +12,72 @@ npm run dev
 
 Open: `http://localhost:3000`
 
-## Manual Start
+Login with your Zone01 credentials (username or email + password).
 
-Terminal 1:
-```bash
-cd server
-go run .
 ```
 
-Terminal 2:
-```bash
-npm run start:frontend
-```
+## Features
+
+- 🔐 **JWT Authentication** - Secure login with Zone01 credentials
+- 📊 **XP Progress Chart** - Line chart showing cumulative XP over time (excluding piscine exercises)
+- 🎯 **Skills Radar Chart** - Spider chart displaying 7 key skills from skill transactions
+- 📈 **Audit Ratio** - Shows your audit performance (given/received)
+- 💾 **Total XP** - Displayed in MB format (e.g., 1.27 MB)
 
 ## GraphQL Queries
 
-All queries are in **`js/api.js`** (based on Zone01 actual schema):
+All GraphQL queries are centralized in **`js/queries.js`** and used by **`js/api.js`**.
 
-### Working Queries:
-- `getUserInfo()` - Get user data (id, login, attrs)
-- `getXPTransactions()` - Get XP history (type: "xp")
-- `getAuditRatio()` - Get audit stats (type: "up"/"down")
-- `getSkillsData()` - Derive skills from completed progress
+### API Functions:
+- `getUserInfo()` - Get user data (id, login, email from attrs)
+- `getXPTransactions()` - Get all XP transactions
+- `getTotalXP()` - Calculate total XP (excludes piscine exercises, keeps final piscine rewards)
+- `getAuditRatio()` - Calculate audit ratio from up/down transactions
+- `getSkillsData()` - Get skills from skill transactions (skill_go, skill_js, skill_algo, etc.)
 - `getProgressData()` - Get project completion history
 
 ### Example Queries:
 
-**Get XP:**
-```javascript
+**Get User Info:**
+```graphql
 query {
-  transaction(where: {type: {_eq: "xp"}}) {
+  user {
+    id
+    login
+    attrs
+  }
+}
+```
+
+**Get XP Transactions:**
+```graphql
+query {
+  transaction(where: {type: {_eq: "xp"}}, order_by: {createdAt: asc}) {
+    id
     amount
     createdAt
     path
-    object { name, type }
+    object {
+      name
+      type
+    }
+  }
+}
+```
+
+**Get Skill Transactions:**
+```graphql
+query {
+  transaction(where: {type: {_like: "skill_%"}}, order_by: {amount: desc}) {
+    type
+    amount
+    createdAt
   }
 }
 ```
 
 **Get Audits:**
-```javascript
+```graphql
 query {
   transaction(where: {type: {_in: ["up", "down"]}}) {
     type
@@ -58,13 +86,16 @@ query {
 }
 ```
 
-**Get Progress:**
-```javascript
+**Get Completed Progress:**
+```graphql
 query {
   progress(where: {isDone: {_eq: true}}) {
     path
     grade
-    object { name, type }
+    object {
+      name
+      type
+    }
   }
 }
 ```
@@ -90,18 +121,18 @@ server/
 
 ## Charts
 
-1. **XP Timeline** - Line chart showing cumulative XP growth over time
-   - Shows every 3 months on X-axis (Oct 24, Jan 25, etc.)
-   - Hover points for exact values
+### 1. XP Progress Over Time (Line Chart)
+- Shows cumulative XP growth from all non-piscine exercises
+- X-axis: Time 
+- Y-axis: XP amount
+- Interactive hover tooltips for exact values
+- Gradient fill and smooth line
 
-2. **Skills Spider** - Radar chart with 7 skills:
-   - Frontend
-   - Programming
-   - Backend
-   - Go
-   - JavaScript
-   - Git
-   - Docker
+### 2. Skills Radar Chart (Spider Chart)
+Displays 7 key technical skills from `skill_*` transactions:
+
+
+Values represent the maximum cumulative skill level from transactions.
 
 ## NPM Scripts
 

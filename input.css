@@ -5,15 +5,15 @@
 /* Custom styles */
 @layer components {
   .btn-primary {
-    @apply bg-[#0062F9] text-white font-semibold py-3 px-4 rounded-lg hover:bg-[#0052D9] transition duration-200 focus:outline-none;
+    @apply bg-blue-800 text-gray-100 font-semibold py-3 px-4 rounded-lg hover:bg-blue-700 hover:text-gray-50 transition duration-200 focus:outline-none;
   }
 
   .card {
-    @apply bg-[#EBEFEF] rounded-lg p-6 border border-gray-200;
+    @apply bg-gray-100 rounded-lg p-6 border border-gray-300;
   }
 
   .input-field {
-    @apply w-full px-4 py-3 bg-[#EBEFEF] border border-gray-300 rounded-lg focus:border-[#0062F9] text-gray-900 transition;
+    @apply w-full px-4 py-3 bg-white border border-gray-300 rounded-lg focus:border-blue-800 text-gray-900 transition;
   }
 }
 

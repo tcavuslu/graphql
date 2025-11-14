@@ -4,18 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zone01 - Profile</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/output.css">
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-900">
     
     <!-- Login View -->
     <div data-view="login" class="hidden">
-        <div class="bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900 min-h-screen flex items-center justify-center">
+        <div class="bg-[#EBEFEF] min-h-screen flex items-center justify-center">
             <div class="container mx-auto px-4">
-                <div class="max-w-md mx-auto bg-white rounded-lg shadow-2xl overflow-hidden">
-                    <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6">
-                        <h1 class="text-3xl font-bold text-white text-center">Zone01 Profile</h1>
-                        <p class="text-blue-100 text-center mt-2">Sign in to view your dashboard</p>
+                <div class="max-w-md mx-auto bg-[#EBEFEF] rounded-lg overflow-hidden border border-gray-200 shadow-lg">
+                    <div class="bg-[#EBEFEF] p-6 border-b border-gray-200">
+                        <h1 class="text-3xl font-bold text-[#191517] text-center">Zone01 Profile</h1>
+                        <p class="text-gray-600 text-center mt-2">Sign in to view your dashboard</p>
                     </div>
                     
                     <div class="p-8">
@@ -48,7 +51,7 @@
                                 >
                             </div>
                             
-                            <div id="errorMessage" class="hidden bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg" role="alert">
+                            <div id="errorMessage" class="hidden bg-red-50 border border-red-300 text-red-700 px-4 py-3 rounded-lg" role="alert">
                                 <p class="font-medium">Authentication Failed</p>
                                 <p class="text-sm" id="errorText">Invalid credentials. Please try again.</p>
                             </div>
@@ -77,13 +80,15 @@
     <!-- Profile View -->
     <div data-view="profile" class="hidden min-h-screen">
         <!-- Navigation Bar -->
-        <nav class="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
-            <div class="container mx-auto px-4 py-4">
+        <nav class="bg-gray-950 fixed w-full z-50 rounded-b-lg">
+            <div class="container mx-auto px-2 py-2">
                 <div class="flex justify-between items-center">
-                    <h1 class="text-2xl font-bold text-white">Zone01 Profile</h1>
+                    <div class="flex items-center gap-3">
+                        <img src="js/assets/Group 343.png" alt="Zone01 Logo" class="h-20 -my-4">
+                    </div>
                     <button 
                         id="logoutButton" 
-                        class="bg-white text-blue-600 px-4 py-2 rounded-lg hover:bg-gray-100 transition font-semibold"
+                        class="bg-gray-50 text-gray-800 px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-gray-50 transition text-sm font-medium"
                     >
                         Logout
                     </button>
@@ -92,9 +97,9 @@
         </nav>
 
         <!-- Loading State -->
-        <div id="loadingState" class="container mx-auto px-4 py-12">
+        <div id="loadingState" class="container mx-auto px-4 py-12 pt-28">
             <div class="flex flex-col items-center justify-center">
-                <svg class="animate-spin h-12 w-12 text-blue-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <svg class="animate-spin h-12 w-12 text-gray-600 mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                     <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
@@ -103,9 +108,9 @@
         </div>
 
         <!-- Error State -->
-        <div id="errorState" class="container mx-auto px-4 py-12 hidden">
-            <div class="bg-red-50 border border-red-200 rounded-lg p-6 max-w-2xl mx-auto">
-                <h2 class="text-red-800 text-xl font-bold mb-2">Error Loading Profile</h2>
+        <div id="errorState" class="container mx-auto px-4 py-12 pt-28 hidden">
+            <div class="bg-red-50 border border-red-300 rounded-lg p-6 max-w-2xl mx-auto">
+                <h2 class="text-gray-800 text-xl font-bold mb-2">Error Loading Profile</h2>
                 <p id="profileErrorMessage" class="text-red-600"></p>
                 <button 
                     id="retryButton" 
@@ -117,22 +122,21 @@
         </div>
 
         <!-- Profile Content -->
-        <div id="profileContent" class="container mx-auto px-4 py-8 hidden">
+        <div id="profileContent" class="container mx-auto px-4 py-8 pt-28 hidden">
             <!-- User Info Section -->
-            <div class="card mb-8">
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">User Information</h2>
+            <div class="card mb-8 bg-gray-100">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg">
-                        <p class="text-blue-600 text-sm font-semibold uppercase mb-1">Username</p>
-                        <p id="userLogin" class="text-2xl font-bold text-blue-900">-</p>
+                    <div class="bg-gray-100 p-4">
+                        <p class="text-gray-800 text-sm font-semibold uppercase mb-1">Username</p>
+                        <p id="userLogin" class="text-2xl font-bold text-gray-800">-</p>
                     </div>
-                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg">
-                        <p class="text-purple-600 text-sm font-semibold uppercase mb-1">Total XP</p>
-                        <p id="totalXP" class="text-2xl font-bold text-purple-900">-</p>
+                    <div class="bg-gray-100 p-4">
+                        <p class="text-gray-800 text-sm font-semibold uppercase mb-1">Total XP</p>
+                        <p id="totalXP" class="text-2xl font-bold text-gray-800">-</p>
                     </div>
-                    <div class="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg">
-                        <p class="text-green-600 text-sm font-semibold uppercase mb-1">Audit Ratio</p>
-                        <p id="auditRatio" class="text-2xl font-bold text-green-900">-</p>
+                    <div class="bg-gray-100 p-4">
+                        <p class="text-gray-800 text-sm font-semibold uppercase mb-1">Audit Ratio</p>
+                        <p id="auditRatio" class="text-2xl font-bold text-gray-800">-</p>
                     </div>
                 </div>
             </div>
@@ -140,13 +144,13 @@
             <!-- Charts Section -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <!-- XP Progress Chart -->
-                <div class="card">
+                <div class="card bg-gray-100">
                     <h2 class="text-xl font-bold text-gray-800 mb-4">XP Progress Over Time</h2>
                     <div id="xpChart" class="w-full" style="min-height: 400px;"></div>
                 </div>
 
                 <!-- Skills Radar Chart -->
-                <div class="card">
+                <div class="card bg-gray-100">
                     <h2 class="text-xl font-bold text-gray-800 mb-4">Skills Overview</h2>
                     <div id="skillsChart" class="w-full flex items-center justify-center" style="min-height: 400px;"></div>
                 </div>

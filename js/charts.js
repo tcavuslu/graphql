@@ -23,7 +23,7 @@ export function createXPChart(data, containerId) {
     container.innerHTML = '';
     
     if (!data || data.length === 0) {
-        container.innerHTML = '<p class="text-gray-500 text-center py-8">No XP data available</p>';
+        container.innerHTML = '<p class="text-gray-600 text-center py-8">No XP data available</p>';
         return;
     }
     
@@ -46,7 +46,7 @@ export function createXPChart(data, containerId) {
     });
     
     // Find max XP for scaling
-    const maxXP = Math.max(...groupedData.map(d => d.cumulative));
+    const maxXP = Math.floor(Math.max(...groupedData.map(d => d.cumulative)));
     const pointSpacing = chartWidth / (groupedData.length - 1 || 1);
     
     // Draw axes
@@ -58,7 +58,7 @@ export function createXPChart(data, containerId) {
         y1: padding.top,
         x2: padding.left,
         y2: height - padding.bottom,
-        stroke: '#cbd5e1',
+        stroke: '#e2e8f0',
         'stroke-width': 2
     });
     axesGroup.appendChild(yAxis);
@@ -69,7 +69,7 @@ export function createXPChart(data, containerId) {
         y1: height - padding.bottom,
         x2: width - padding.right,
         y2: height - padding.bottom,
-        stroke: '#cbd5e1',
+        stroke: '#e2e8f0',
         'stroke-width': 2
     });
     axesGroup.appendChild(xAxis);
@@ -78,13 +78,15 @@ export function createXPChart(data, containerId) {
     const ySteps = 5;
     for (let i = 0; i <= ySteps; i++) {
         const y = padding.top + (chartHeight / ySteps) * i;
-        const value = Math.round(maxXP * (1 - i / ySteps));
+        const value = Math.floor(maxXP * (1 - i / ySteps) / 1000);
         
         const label = createSVGElement('text', {
             x: padding.left - 10,
             y: y + 5,
             'text-anchor': 'end',
-            class: 'text-xs fill-gray-600'
+            class: 'text-xs',
+            fill: '#475569',
+            style: 'font-family: Montserrat, sans-serif;'
         });
         label.textContent = formatNumber(value);
         axesGroup.appendChild(label);
@@ -135,24 +137,33 @@ export function createXPChart(data, containerId) {
     });
     lineGroup.insertBefore(areaPath, lineGroup.firstChild);
     
-    // Draw points and labels (only every 3 months)
+    // Store circles and tooltips separately to control z-index
+    const circlesData = [];
+    const tooltipsData = [];
+    
+    // Prepare circles and tooltips data
     groupedData.forEach((item, index) => {
         const x = padding.left + index * pointSpacing;
         const y = padding.top + chartHeight - (item.cumulative / maxXP) * chartHeight;
         
+        circlesData.push({ x, y, item, index });
+    });
+    
+    // Draw points first
+    circlesData.forEach(({ x, y, item, index }) => {
         // Point circle
         const circle = createSVGElement('circle', {
             cx: x,
             cy: y,
             r: 5,
-            fill: '#3b82f6',
-            stroke: '#fff',
+            fill: '#1e40af',
+            stroke: '#EBEFEF',
             'stroke-width': 2,
             class: 'point'
         });
         circle.style.cursor = 'pointer';
         
-        // Tooltip
+        // Create tooltip
         const tooltip = createSVGElement('g', {
             class: 'tooltip',
             style: 'opacity: 0; pointer-events: none;'
@@ -165,14 +176,18 @@ export function createXPChart(data, containerId) {
             height: 40,
             fill: '#1e293b',
             rx: 6,
-            opacity: 0.95
+            opacity: 0.95,
+            stroke: '#475569',
+            'stroke-width': 1
         });
         
         const tooltipText = createSVGElement('text', {
             x: x,
             y: y - 38,
             'text-anchor': 'middle',
-            class: 'text-xs fill-white font-semibold'
+            class: 'text-xs font-semibold',
+            fill: '#FFFFFF',
+            style: 'font-family: Montserrat, sans-serif;'
         });
         tooltipText.textContent = `${item.month}`;
         
@@ -180,9 +195,11 @@ export function createXPChart(data, containerId) {
             x: x,
             y: y - 22,
             'text-anchor': 'middle',
-            class: 'text-xs fill-blue-300'
+            class: 'text-xs',
+            fill: '#FFFFFF',
+            style: 'font-family: Montserrat, sans-serif;'
         });
-        tooltipValue.textContent = `${formatNumber(item.cumulative)} XP`;
+        tooltipValue.textContent = `${formatNumber(Math.floor(item.cumulative / 1000))} k`;
         
         tooltip.appendChild(tooltipBg);
         tooltip.appendChild(tooltipText);
@@ -199,19 +216,26 @@ export function createXPChart(data, containerId) {
         });
         
         lineGroup.appendChild(circle);
-        lineGroup.appendChild(tooltip);
+        tooltipsData.push(tooltip);
         
         // X-axis label (show every 3 months)
-        if (index % 3 === 0 || index === groupedData.length - 1) {
+        if (index % 3 === 0 || index === circlesData.length - 1) {
             const label = createSVGElement('text', {
                 x: x,
                 y: height - padding.bottom + 20,
                 'text-anchor': 'middle',
-                class: 'text-xs fill-gray-600'
+                class: 'text-xs',
+                fill: '#475569',
+                style: 'font-family: Montserrat, sans-serif;'
             });
             label.textContent = item.shortMonth;
             lineGroup.appendChild(label);
         }
+    });
+    
+    // Append all tooltips after circles to ensure they render on top
+    tooltipsData.forEach(tooltip => {
+        lineGroup.appendChild(tooltip);
     });
     
     // Add gradient definitions
@@ -227,11 +251,11 @@ export function createXPChart(data, containerId) {
     });
     const lineStop1 = createSVGElement('stop', {
         offset: '0%',
-        'stop-color': '#3b82f6'
+        'stop-color': '#1e40af'
     });
     const lineStop2 = createSVGElement('stop', {
         offset: '100%',
-        'stop-color': '#8b5cf6'
+        'stop-color': '#1e40af'
     });
     lineGradient.appendChild(lineStop1);
     lineGradient.appendChild(lineStop2);
@@ -247,12 +271,12 @@ export function createXPChart(data, containerId) {
     });
     const areaStop1 = createSVGElement('stop', {
         offset: '0%',
-        'stop-color': '#3b82f6',
-        'stop-opacity': '0.5'
+        'stop-color': '#1e40af',
+        'stop-opacity': '0.4'
     });
     const areaStop2 = createSVGElement('stop', {
         offset: '100%',
-        'stop-color': '#8b5cf6',
+        'stop-color': '#1e40af',
         'stop-opacity': '0.1'
     });
     areaGradient.appendChild(areaStop1);
@@ -267,9 +291,10 @@ export function createXPChart(data, containerId) {
         x: width / 2,
         y: 25,
         'text-anchor': 'middle',
-        class: 'text-sm fill-gray-700 font-semibold'
+        class: 'text-sm font-semibold',
+        fill: '#1e293b',
+        style: 'font-family: Montserrat, sans-serif;'
     });
-    title.textContent = 'Cumulative XP Over Time';
     svg.appendChild(title);
     
     container.appendChild(svg);
@@ -285,7 +310,7 @@ export function createSkillsRadarChart(skillsData, containerId) {
     container.innerHTML = '';
     
     if (!skillsData || skillsData.length === 0) {
-        container.innerHTML = '<p class="text-gray-500 text-center py-8">No skills data available</p>';
+        container.innerHTML = '<p class="text-gray-600 text-center py-8">No skills data available</p>';
         return;
     }
     
@@ -359,7 +384,9 @@ export function createSkillsRadarChart(skillsData, containerId) {
             y: labelY,
             'text-anchor': 'middle',
             'dominant-baseline': 'middle',
-            class: 'text-xs fill-gray-700 font-semibold'
+            class: 'text-xs font-semibold',
+            fill: '#1e293b',
+            style: 'font-family: Montserrat, sans-serif;'
         });
         label.textContent = skill.name;
         axesGroup.appendChild(label);
@@ -380,10 +407,9 @@ export function createSkillsRadarChart(skillsData, containerId) {
     
     const polygon = createSVGElement('polygon', {
         points: polygonPoints,
-        fill: 'url(#radarGradient)',
-        stroke: '#3b82f6',
-        'stroke-width': 2,
-        opacity: 0.7
+        fill: 'rgba(30, 64, 175, 0.2)',
+        stroke: '#1e40af',
+        'stroke-width': 2
     });
     
     svg.appendChild(polygon);
@@ -391,53 +417,121 @@ export function createSkillsRadarChart(skillsData, containerId) {
     // Draw points
     const pointsGroup = createSVGElement('g', { class: 'points' });
     
+    // Store references to circles and labels for cross-interaction
+    const circleRefs = [];
+    const tooltipRefs = [];
+    
     points.forEach((point, index) => {
         const circle = createSVGElement('circle', {
             cx: point.x,
             cy: point.y,
             r: 4,
-            fill: '#3b82f6',
-            stroke: '#fff',
+            fill: '#1e40af',
+            stroke: '#EBEFEF',
             'stroke-width': 2
         });
         
         circle.style.cursor = 'pointer';
+        circle.style.transition = 'r 0.2s ease';
         
-        // Tooltip on hover
-        circle.addEventListener('mouseenter', () => {
-            circle.setAttribute('r', 6);
-        });
-        
-        circle.addEventListener('mouseleave', () => {
-            circle.setAttribute('r', 4);
-        });
-        
+        circleRefs.push(circle);
         pointsGroup.appendChild(circle);
     });
     
     svg.appendChild(pointsGroup);
     
-    // Add gradient
-    const defs = createSVGElement('defs');
-    const gradient = createSVGElement('radialGradient', {
-        id: 'radarGradient'
+    // Create tooltips group (separate from points to ensure proper z-index)
+    const tooltipsGroup = createSVGElement('g', { class: 'tooltips' });
+    
+    points.forEach((point, index) => {
+        // Create tooltip for this point
+        const tooltip = createSVGElement('g', {
+            class: 'skill-tooltip',
+            style: 'opacity: 0; pointer-events: none;'
+        });
+        
+        const tooltipBg = createSVGElement('rect', {
+            x: point.x - 30,
+            y: point.y - 40,
+            width: 60,
+            height: 28,
+            fill: '#1e293b',
+            rx: 6,
+            opacity: 0.95,
+            stroke: '#475569',
+            'stroke-width': 1
+        });
+        
+        const tooltipValue = createSVGElement('text', {
+            x: point.x,
+            y: point.y - 22,
+            'text-anchor': 'middle',
+            class: 'text-sm font-semibold',
+            fill: '#FFFFFF',
+            style: 'font-family: Montserrat, sans-serif;'
+        });
+        tooltipValue.textContent = `${Math.round(skillsData[index].value)}%`;
+        
+        tooltip.appendChild(tooltipBg);
+        tooltip.appendChild(tooltipValue);
+        
+        tooltipRefs.push(tooltip);
+        tooltipsGroup.appendChild(tooltip);
     });
     
-    const stop1 = createSVGElement('stop', {
-        offset: '0%',
-        'stop-color': '#8b5cf6',
-        'stop-opacity': 0.8
-    });
-    const stop2 = createSVGElement('stop', {
-        offset: '100%',
-        'stop-color': '#3b82f6',
-        'stop-opacity': 0.4
+    svg.appendChild(tooltipsGroup);
+    
+    // Add hover effects to labels (stored from earlier)
+    skillsData.forEach((skill, index) => {
+        const angle = angleStep * index - Math.PI / 2;
+        const labelDistance = radius + 30;
+        const labelX = center + labelDistance * Math.cos(angle);
+        const labelY = center + labelDistance * Math.sin(angle);
+        
+        // Find the label element that was created earlier
+        const labels = axesGroup.querySelectorAll('text');
+        const label = labels[index];
+        
+        if (label) {
+            label.style.cursor = 'pointer';
+            label.style.transition = 'all 0.2s ease';
+            
+            // Hover on label affects corresponding circle and shows tooltip
+            label.addEventListener('mouseenter', () => {
+                circleRefs[index].setAttribute('r', 6);
+                label.setAttribute('fill', '#1e40af');
+                tooltipRefs[index].style.opacity = '1';
+            });
+            
+            label.addEventListener('mouseleave', () => {
+                circleRefs[index].setAttribute('r', 4);
+                label.setAttribute('fill', '#1e293b');
+                tooltipRefs[index].style.opacity = '0';
+            });
+        }
     });
     
-    gradient.appendChild(stop1);
-    gradient.appendChild(stop2);
-    defs.appendChild(gradient);
-    svg.appendChild(defs);
+    // Add hover effects to circles
+    circleRefs.forEach((circle, index) => {
+        const labels = axesGroup.querySelectorAll('text');
+        const label = labels[index];
+        
+        circle.addEventListener('mouseenter', () => {
+            circle.setAttribute('r', 6);
+            tooltipRefs[index].style.opacity = '1';
+            if (label) {
+                label.setAttribute('fill', '#1e40af');
+            }
+        });
+        
+        circle.addEventListener('mouseleave', () => {
+            circle.setAttribute('r', 4);
+            tooltipRefs[index].style.opacity = '0';
+            if (label) {
+                label.setAttribute('fill', '#1e293b');
+            }
+        });
+    });
     
     container.appendChild(svg);
 }
@@ -492,7 +586,7 @@ function groupXPByMonthCumulative(transactions) {
         cumulative += item.xp;
         return {
             ...item,
-            cumulative
+            cumulative: Math.floor(cumulative)
         };
     });
 }

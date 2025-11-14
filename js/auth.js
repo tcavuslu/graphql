@@ -1,7 +1,6 @@
 // Authentication module for handling login, logout, and JWT management
 
-const API_BASE_URL = 'http://localhost:8080';
-const AUTH_ENDPOINT = `${API_BASE_URL}/api/auth/signin`;
+import { API_BASE_URL, AUTH_ENDPOINT } from './config.js';
 
 /**
  * Login function that authenticates user with username/email and password

@@ -9,7 +9,7 @@
     "start:frontend": "http-server . -p 3000 -c-1",
     "start:backend": "cd server && go run .",
     "dev": "concurrently \"npm run watch:css\" \"npm run start:backend\" \"npm run start:frontend\"",
-    "build": "npm run build:css && mkdir -p public && cp index.html public/ && cp -r css public/ && cp -r js public/"
+   "build": "npm run build:css"
   },
   "keywords": [
     "graphql",

@@ -2,12 +2,7 @@
 
 import { API_BASE_URL, AUTH_ENDPOINT } from './config.js';
 
-/**
- * Login function that authenticates user with username/email and password
- * @param {string} identifier - Username or email
- * @param {string} password - User password
- * @returns {Promise<string>} JWT token
- */
+// Login function that authenticates user with username/email and password
 export async function login(identifier, password) {
     try {
         // Create Base64 encoded credentials
@@ -53,9 +48,7 @@ export async function login(identifier, password) {
     }
 }
 
-/**
- * Logout function that clears stored credentials and navigates to login
- */
+// Logout function that clears stored credentials and navigates to login
 export function logout() {
     localStorage.removeItem('jwt_token');
     localStorage.removeItem('user_id');
@@ -63,26 +56,12 @@ export function logout() {
     window.location.hash = 'login';
 }
 
-/**
- * Get stored JWT token
- * @returns {string|null} JWT token or null if not found
- */
+// Get stored JWT token
 export function getToken() {
     return localStorage.getItem('jwt_token');
 }
 
-/**
- * Get stored user ID
- * @returns {string|null} User ID or null if not found
- */
-export function getUserId() {
-    return localStorage.getItem('user_id');
-}
-
-/**
- * Check if user is authenticated
- * @returns {boolean} True if valid token exists
- */
+// Check if user is authenticated
 export function isAuthenticated() {
     const token = getToken();
     if (!token) return false;
@@ -105,11 +84,7 @@ export function isAuthenticated() {
     }
 }
 
-/**
- * Decode JWT token to extract user ID
- * @param {string} token - JWT token
- * @returns {string|null} User ID or null if extraction fails
- */
+// Decode JWT token to extract user ID
 function getUserIdFromToken(token) {
     try {
         const payload = JSON.parse(atob(token.split('.')[1]));
@@ -119,12 +94,3 @@ function getUserIdFromToken(token) {
         return null;
     }
 }
-
-/**
- * Check if user is authenticated (used by router)
- * Router handles the redirect, this just checks
- */
-export function requireAuth() {
-    return isAuthenticated();
-}
-

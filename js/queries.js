@@ -33,23 +33,6 @@ export const queries = {
         }
     `,
 
-    // Get aggregate XP (total) - not used, manual sum is more reliable
-    getXPAggregate: `
-        query {
-            transaction_aggregate(
-                where: {
-                    type: { _eq: "xp" }
-                }
-            ) {
-                aggregate {
-                    sum {
-                        amount
-                    }
-                }
-            }
-        }
-    `,
-
     // Get user progress
     getProgress: `
         query {
@@ -80,7 +63,7 @@ export const queries = {
         }
     `,
 
-    // Get all skill transactions (skill_go, skill_js, skill_algo, etc.)
+    // Get all skill transactions
     getSkillTransactions: `
         query {
             transaction(
@@ -96,4 +79,3 @@ export const queries = {
         }
     `
 };
-

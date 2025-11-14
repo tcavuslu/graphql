@@ -12,9 +12,7 @@ const routes = {
     }
 };
 
-/**
- * Initialize router
- */
+// Initialize router
 export function init() {
     // Listen for hash changes
     window.addEventListener('hashchange', handleRoute);
@@ -24,17 +22,12 @@ export function init() {
     handleRoute();
 }
 
-/**
- * Navigate to a specific route
- * @param {string} route - Route name (e.g., 'login', 'profile')
- */
+// Navigate to a specific route
 export function navigate(route) {
     window.location.hash = route;
 }
 
-/**
- * Handle current route
- */
+// Handle current route
 function handleRoute() {
     // Get current hash (remove #)
     let hash = window.location.hash.slice(1) || 'login';
@@ -63,10 +56,7 @@ function handleRoute() {
     showView(route.view);
 }
 
-/**
- * Show specific view and hide others
- * @param {string} viewName - Name of the view to show
- */
+// Show specific view and hide others
 function showView(viewName) {
     // Hide all views
     const allViews = document.querySelectorAll('[data-view]');
@@ -84,11 +74,14 @@ function showView(viewName) {
     }
 }
 
-/**
- * Initialize view-specific functionality
- * @param {string} viewName - Name of the view
- */
+// Initialize view-specific functionality
 async function initializeView(viewName) {
+    if (viewName === 'login') {
+        // Dynamically import and initialize login
+        const { initLogin } = await import('./login.js');
+        initLogin();
+    }
+    
     if (viewName === 'profile') {
         // Dynamically import and initialize profile
         const { initProfile } = await import('./profile.js');
@@ -96,10 +89,7 @@ async function initializeView(viewName) {
     }
 }
 
-/**
- * Get current route
- * @returns {string} Current route name
- */
+// Get current route
 export function getCurrentRoute() {
     return window.location.hash.slice(1) || 'login';
 }

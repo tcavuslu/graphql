@@ -1,17 +1,12 @@
 // Profile page logic
 
 import { logout } from './auth.js';
-import { getAllProfileData, testAPI } from './api.js';
+import { getAllProfileData } from './api.js';
 import { createXPChart, createSkillsRadarChart } from './charts.js';
-
-// Make testAPI available in console
-window.testAPI = testAPI;
 
 let isInitialized = false;
 
-/**
- * Initialize profile page (called by router)
- */
+// Initialize profile page (called by router)
 export async function initProfile() {
     // Prevent multiple initializations
     if (isInitialized) {
@@ -19,9 +14,6 @@ export async function initProfile() {
     }
     
     // Get DOM elements
-    const loadingState = document.getElementById('loadingState');
-    const errorState = document.getElementById('errorState');
-    const profileContent = document.getElementById('profileContent');
     const logoutButton = document.getElementById('logoutButton');
     const retryButton = document.getElementById('retryButton');
     
@@ -41,11 +33,6 @@ export async function initProfile() {
         // Fetch all profile data
         const profileData = await getAllProfileData();
         
-        // Debug logging
-        console.log('📊 Profile Data:', profileData);
-        console.log('💰 Total XP:', profileData.totalXP);
-        console.log('🎯 Skills:', profileData.skills);
-        
         // Render profile data
         renderProfile(profileData);
         
@@ -56,10 +43,7 @@ export async function initProfile() {
     }
 }
 
-/**
- * Render profile data to the page
- * @param {object} data - Profile data
- */
+// Render profile data to the page
 function renderProfile(data) {
     // Get DOM elements
     const userLoginEl = document.getElementById('userLogin');
@@ -76,9 +60,7 @@ function renderProfile(data) {
     createSkillsRadarChart(data.skills, 'skillsChart');
 }
 
-/**
- * Show loading state
- */
+// Show loading state
 function showLoading() {
     const loadingState = document.getElementById('loadingState');
     const errorState = document.getElementById('errorState');
@@ -89,10 +71,7 @@ function showLoading() {
     profileContent?.classList.add('hidden');
 }
 
-/**
- * Show error state
- * @param {string} message - Error message
- */
+// Show error state
 function showError(message) {
     const loadingState = document.getElementById('loadingState');
     const errorState = document.getElementById('errorState');
@@ -105,9 +84,7 @@ function showError(message) {
     if (errorMessage) errorMessage.textContent = message;
 }
 
-/**
- * Show profile content
- */
+// Show profile content
 function showContent() {
     const loadingState = document.getElementById('loadingState');
     const errorState = document.getElementById('errorState');
@@ -118,22 +95,8 @@ function showContent() {
     profileContent?.classList.remove('hidden');
 }
 
-/**
- * Format number with thousand separators
- * @param {number} num - Number to format
- * @returns {string} Formatted number
- */
-function formatNumber(num) {
-    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
-
-/**
- * Format XP in MB without decimals (e.g., 1270000 -> "1.27 MB")
- * @param {number} xp - XP amount
- * @returns {string} Formatted XP string
- */
+// Format XP in MB without decimals
 function formatXP(xp) {
     const mb = xp / 1000000;
     return mb.toFixed(2) + ' MB';
 }
-

@@ -6,7 +6,7 @@
   "scripts": {
     "build:css": "tailwindcss -i ./input.css -o ./css/output.css",
     "watch:css": "tailwindcss -i ./input.css -o ./css/output.css --watch",
-    "start:frontend": "http-server . -p 3000 -c-1",
+    "start:frontend": "http-server . -p 3000 -c-1 --silent",
     "start:backend": "cd server && go run .",
     "dev": "concurrently \"npm run watch:css\" \"npm run start:backend\" \"npm run start:frontend\"",
    "build": "npm run build:css"

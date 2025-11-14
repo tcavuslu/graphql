@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zone01 - Profile</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -160,47 +161,9 @@
 
     <script type="module">
         import { init } from './js/router.js';
-        import { login } from './js/auth.js';
-        import { navigate } from './js/router.js';
         
-        // Initialize router
+        // Initialize router - it will handle loading login/profile views
         init();
-        
-        // Login form handler
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const identifier = document.getElementById('identifier').value.trim();
-            const password = document.getElementById('password').value;
-            const errorMessage = document.getElementById('errorMessage');
-            const errorText = document.getElementById('errorText');
-            const loginButton = document.getElementById('loginButton');
-            const loginButtonText = document.getElementById('loginButtonText');
-            const loginSpinner = document.getElementById('loginSpinner');
-            
-            // Hide error message
-            errorMessage.classList.add('hidden');
-            
-            // Show loading state
-            loginButton.disabled = true;
-            loginButtonText.classList.add('hidden');
-            loginSpinner.classList.remove('hidden');
-            
-            try {
-                await login(identifier, password);
-                // Navigate to profile on success
-                navigate('profile');
-            } catch (error) {
-                // Show error message
-                errorText.textContent = error.message || 'Invalid credentials. Please try again.';
-                errorMessage.classList.remove('hidden');
-                
-                // Reset button state
-                loginButton.disabled = false;
-                loginButtonText.classList.remove('hidden');
-                loginSpinner.classList.add('hidden');
-            }
-        });
     </script>
 </body>
 </html>

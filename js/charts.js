@@ -1,8 +1,6 @@
 // SVG Chart generation module
 
-/**
- * Create an SVG element with attributes
- */
+// Create an SVG element with attributes
 export function createSVGElement(type, attributes = {}) {
     const element = document.createElementNS('http://www.w3.org/2000/svg', type);
     
@@ -13,11 +11,7 @@ export function createSVGElement(type, attributes = {}) {
     return element;
 }
 
-/**
- * Create XP progress chart (line chart with time axis)
- * @param {Array} data - Array of XP transactions with amount and createdAt
- * @param {string} containerId - ID of container element
- */
+// Create XP progress chart (line chart with time axis)
 export function createXPChart(data, containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
@@ -300,11 +294,7 @@ export function createXPChart(data, containerId) {
     container.appendChild(svg);
 }
 
-/**
- * Create skills radar/spider chart
- * @param {Array} skillsData - Array of 7 skills with name and value
- * @param {string} containerId - ID of container element
- */
+// Create skills radar/spider chart
 export function createSkillsRadarChart(skillsData, containerId) {
     const container = document.getElementById(containerId);
     container.innerHTML = '';
@@ -351,7 +341,6 @@ export function createSkillsRadarChart(skillsData, containerId) {
     
     // Use fixed max of 100 for consistent scaling
     const maxScale = 100;
-    console.log('🎯 Skill values:', skillsData.map(s => `${s.name}: ${s.value}`));
     
     // Draw axes and labels
     const axesGroup = createSVGElement('g', { class: 'axes' });
@@ -536,11 +525,7 @@ export function createSkillsRadarChart(skillsData, containerId) {
     container.appendChild(svg);
 }
 
-/**
- * Group XP transactions by month with cumulative totals
- * @param {Array} transactions - XP transactions
- * @returns {Array} Grouped data by month with cumulative XP
- */
+// Group XP transactions by month with cumulative totals
 function groupXPByMonthCumulative(transactions) {
     // Filter out piscine exercises (same logic as getTotalXP)
     const filteredTransactions = transactions.filter(t => {
@@ -591,11 +576,7 @@ function groupXPByMonthCumulative(transactions) {
     });
 }
 
-/**
- * Format number with thousand separators
- * @param {number} num - Number to format
- * @returns {string} Formatted number
- */
+// Format number with thousand separators
 function formatNumber(num) {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }

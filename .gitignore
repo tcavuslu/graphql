@@ -4,6 +4,9 @@ node_modules/
 # Compiled CSS
 css/output.css
 
+# Build output
+public/
+
 # Go
 server/graphql-proxy
 *.exe

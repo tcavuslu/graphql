@@ -1,14 +1,6 @@
 {
   "buildCommand": "npm run build",
-  "outputDirectory": ".",
-  "devCommand": "npm run dev",
-  "installCommand": "npm install",
-  "framework": null,
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/$1"
-    }
-  ]
+  "outputDirectory": "public",
+  "installCommand": "npm install"
 }
 

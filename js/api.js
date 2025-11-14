@@ -3,7 +3,7 @@
 import { getToken, logout } from './auth.js';
 import { queries } from './queries.js';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = 'https://platform.zone01.gr';
 const GRAPHQL_ENDPOINT = `${API_BASE_URL}/api/graphql`;
 
 /**

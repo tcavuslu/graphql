@@ -1,6 +1,6 @@
 // Authentication module for handling login, logout, and JWT management
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_BASE_URL = 'https://platform.zone01.gr';
 const AUTH_ENDPOINT = `${API_BASE_URL}/api/auth/signin`;
 
 /**

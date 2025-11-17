@@ -11,6 +11,17 @@ export function initLogin() {
     const newForm = form.cloneNode(true);
     form.parentNode.replaceChild(newForm, form);
     
+    // Reset button state to ensure it's not stuck in loading state
+    const loginButton = newForm.querySelector('#loginButton');
+    const loginButtonText = newForm.querySelector('#loginButtonText');
+    const loginSpinner = newForm.querySelector('#loginSpinner');
+    
+    if (loginButton && loginButtonText && loginSpinner) {
+        loginButton.disabled = false;
+        loginButtonText.classList.remove('hidden');
+        loginSpinner.classList.add('hidden');
+    }
+    
     // Add submit event listener
     newForm.addEventListener('submit', handleLoginSubmit);
 }
